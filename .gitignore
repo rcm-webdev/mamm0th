@@ -23,6 +23,6 @@ dist-ssr
 .env
 .next
 .bolt
-docs/
 tasks/
 .claude/
+.claude-design
