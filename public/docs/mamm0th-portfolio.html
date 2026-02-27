@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mamm0th — Product Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   CSS CUSTOM PROPERTIES — MAMM0TH APP DESIGN SYSTEM
+   ============================================ */
+:root {
+  --bg:          #050505;
+  --ink:         #ffffff;
+  --ink-muted:   rgba(255, 255, 255, 0.5);
+  --accent:      rgba(255, 255, 255, 0.9);
+  --rule:        rgba(255, 255, 255, 0.08);
+  --accent-bg:   rgba(255, 255, 255, 0.05);
+  --font-sans:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Fluid type scale */
+  --text-xs:    clamp(0.5rem,  0.8vw,  0.65rem);
+  --text-sm:    clamp(0.6rem,  1vw,    0.75rem);
+  --text-base:  clamp(0.75rem, 1.2vw,  0.9rem);
+  --text-md:    clamp(0.85rem, 1.4vw,  1.05rem);
+  --text-lg:    clamp(1rem,    1.8vw,  1.3rem);
+  --text-xl:    clamp(1.25rem, 2.5vw,  1.75rem);
+  --text-2xl:   clamp(1.6rem,  3.5vw,  2.5rem);
+  --text-3xl:   clamp(2rem,    4.5vw,  3.25rem);
+
+  /* Fluid spacing */
+  --pad-h: clamp(1.5rem, 5vw, 4rem);
+  --pad-v: clamp(1rem,   3vw, 2rem);
+  --gap:   clamp(0.5rem, 1.5vw, 1.25rem);
+}
+
+/* ============================================
+   RESET + BASE
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  height: 100%;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  height: 100%;
+  background: var(--bg);
+  font-family: var(--font-sans);
+  color: var(--ink);
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  opacity: 0.03;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================
+   PROGRESS BAR
+   ============================================ */
+#progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: #fff;
+  z-index: 100;
+  transition: width 0.35s ease;
+}
+
+/* ============================================
+   SLIDES — VIEWPORT FITTING (MANDATORY)
+   ============================================ */
+.slide {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  scroll-snap-align: start;
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
+}
+
+/* ============================================
+   SHARED CHROME: TOP BAR + BOTTOM BAR
+   ============================================ */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--pad-v) var(--pad-h);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.project-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.section-tag {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.25em 0.65em;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(0.6rem, 1.2vw, 0.9rem) var(--pad-h);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.slide-num {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+.rule-line {
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+  margin: 0 clamp(1rem, 3vw, 2.5rem);
+}
+
+/* ============================================
+   LAYOUT HELPERS
+   ============================================ */
+.two-col {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.two-col.even {
+  grid-template-columns: 1fr 1fr;
+}
+
+.left-col {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: var(--pad-v) clamp(1.5rem, 3vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.right-col {
+  padding: var(--pad-v) clamp(1.5rem, 3vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--gap);
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ============================================
+   TYPOGRAPHY COMPONENTS
+   ============================================ */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: clamp(0.4rem, 1vw, 0.75rem);
+}
+
+h1.slide-title {
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+h1.slide-title strong {
+  font-weight: 800;
+  display: block;
+}
+
+h2.slide-heading {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+h2.slide-heading strong { font-weight: 800; }
+
+h3.card-heading {
+  font-size: var(--text-md);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: clamp(0.3rem, 0.8vw, 0.5rem);
+  color: var(--ink);
+}
+
+.section-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.body-text {
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.body-text em {
+  font-style: normal;
+  color: #fff;
+  font-weight: 600;
+}
+
+.mono-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* ============================================
+   META GRID (slide 1)
+   ============================================ */
+.meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(0.6rem, 1.5vw, 1rem);
+}
+
+.meta-item {
+  border-top: 1px solid var(--rule);
+  padding-top: clamp(0.3rem, 0.8vw, 0.5rem);
+}
+
+.meta-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 0.2rem;
+}
+
+.meta-value {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================
+   STAT ROW
+   ============================================ */
+.stat-row {
+  display: flex;
+  gap: clamp(1.25rem, 3.5vw, 3rem);
+  padding-top: clamp(0.75rem, 1.5vw, 1.25rem);
+  border-top: 1px solid var(--rule);
+  flex-wrap: wrap;
+}
+
+.stat { display: flex; flex-direction: column; gap: 0.2rem; }
+
+.stat-num {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+}
+
+/* ============================================
+   3-CARD GRID (slides 3, 13)
+   ============================================ */
+.card-grid {
+  display: grid;
+  gap: var(--gap);
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.card-grid.cols-3  { grid-template-columns: repeat(3, 1fr); }
+.card-grid.cols-2x3 { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); }
+
+.card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  padding: clamp(0.75rem, 1.8vw, 1.5rem);
+  border-radius: 1rem;
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.3rem, 0.8vw, 0.5rem);
+  overflow: hidden;
+  min-height: 0;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
+}
+
+.card .card-num {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.08em;
+}
+
+.card p {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================
+   TABLE SLIDES (9, 10, 11)
+   ============================================ */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  flex-shrink: 0;
+}
+
+.data-table th {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-align: left;
+  padding: clamp(0.4rem, 1vw, 0.65rem) clamp(0.5rem, 1.2vw, 0.9rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: nowrap;
+}
+
+.data-table td {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.85);
+  padding: clamp(0.4rem, 1vw, 0.65rem) clamp(0.5rem, 1.2vw, 0.9rem);
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+  line-height: 1.4;
+}
+
+.data-table tr.highlight td {
+  background: var(--accent-bg);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.data-table tr.highlight td:first-child {
+  border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.score-cell {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  text-align: center;
+}
+
+.callout-box {
+  margin-top: clamp(0.6rem, 1.5vw, 1rem);
+  padding: clamp(0.6rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.25rem);
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
+  background: var(--accent-bg);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.callout-box .callout-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0.3rem;
+}
+
+.callout-box p {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ============================================
+   PERSONA CARDS (slides 7, 8)
+   ============================================ */
+.persona-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: clamp(6rem, 16vw, 10rem) 1fr;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.persona-strip {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--pad-v) 1rem;
+  gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+.persona-strip .persona-initial {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.persona-strip .persona-name {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+}
+
+.persona-detail {
+  padding: var(--pad-v) clamp(1.5rem, 3vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  overflow: hidden;
+  min-height: 0;
+}
+
+.persona-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+
+.persona-field {
+  border-top: 1px solid var(--rule);
+  padding-top: clamp(0.3rem, 0.8vw, 0.5rem);
+}
+
+.persona-field .field-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 0.2rem;
+}
+
+.persona-field .field-val {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.jtbd-quote {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: clamp(0.6rem, 1.5vw, 1rem);
+  margin-top: auto;
+}
+
+.jtbd-quote .jtbd-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0.4rem;
+}
+
+.jtbd-quote blockquote {
+  font-size: var(--text-md);
+  font-weight: 400;
+  line-height: 1.55;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 65ch;
+}
+
+/* ============================================
+   STAKEHOLDER TABLE (slide 6)
+   ============================================ */
+.stakeholder-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--gap);
+}
+
+.stakeholder-table th {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  text-align: left;
+  padding: clamp(0.3rem, 0.8vw, 0.5rem) clamp(0.4rem, 1vw, 0.75rem);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stakeholder-table td {
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.85);
+  padding: clamp(0.3rem, 0.8vw, 0.5rem) clamp(0.4rem, 1vw, 0.75rem);
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  line-height: 1.4;
+}
+
+/* ============================================
+   SCOPE LIST (slide 6)
+   ============================================ */
+.scope-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.3rem, 0.8vw, 0.6rem);
+}
+
+.scope-list li {
+  display: flex;
+  gap: 0.65rem;
+  align-items: baseline;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.scope-list li::before {
+  content: '—';
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  flex-shrink: 0;
+}
+
+/* ============================================
+   METRIC LISTS (slide 5)
+   ============================================ */
+.metric-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.4rem, 1vw, 0.75rem);
+}
+
+.metric-list li {
+  border-top: 1px solid var(--rule);
+  padding-top: clamp(0.3rem, 0.8vw, 0.5rem);
+}
+
+.metric-list li .metric-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 0.15rem;
+}
+
+.metric-list li .metric-val {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ============================================
+   UX FLOW STRIP (slide 12)
+   ============================================ */
+.ux-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ux-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(0.6rem, 1.5vw, 1rem) clamp(0.5rem, 1.2vw, 0.9rem);
+  border-right: 1px solid var(--rule);
+  min-width: 0;
+}
+
+.ux-step:last-child { border-right: none; }
+
+.ux-step-num {
+  width: clamp(1.25rem, 2.5vw, 1.75rem);
+  height: clamp(1.25rem, 2.5vw, 1.75rem);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: clamp(0.3rem, 0.8vw, 0.5rem);
+  flex-shrink: 0;
+  border-radius: 0.25rem;
+}
+
+.ux-step p {
+  font-size: var(--text-xs);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+/* ============================================
+   SCOPE IN/OUT (slide 12)
+   ============================================ */
+.scope-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.scope-section { overflow: hidden; min-height: 0; }
+
+.scope-section-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: clamp(0.4rem, 1vw, 0.65rem);
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.scope-section-label.in  { color: rgba(255, 255, 255, 0.9); }
+.scope-section-label.out { color: var(--ink-muted); }
+
+/* ============================================
+   ENGINEERING LIST (slide 14)
+   ============================================ */
+.eng-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+.eng-item {
+  border-top: 1px solid var(--rule);
+  padding-top: clamp(0.4rem, 1vw, 0.65rem);
+}
+
+.eng-item-title {
+  font-size: var(--text-md);
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.eng-item-desc {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.eng-item-desc em {
+  font-style: normal;
+  font-family: var(--font-sans);
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* ============================================
+   NORTH STAR HIGHLIGHT (slide 4)
+   ============================================ */
+.north-star {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 1rem;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  position: relative;
+  margin-bottom: var(--gap);
+}
+
+.north-star::before {
+  content: 'North Star';
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.2em 0.6em;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: absolute;
+  top: calc(-1 * clamp(0.55rem, 1.1vw, 0.75rem));
+  left: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.north-star-metric {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.25;
+  margin-top: 0.5rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.north-star-sub {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--ink-muted);
+  margin-top: 0.25rem;
+}
+
+/* ============================================
+   GOAL LIST (slide 4)
+   ============================================ */
+.goal-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.4rem, 1vw, 0.65rem);
+}
+
+.goal-list li {
+  display: flex;
+  gap: 0.65rem;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  border-top: 1px solid var(--rule);
+  padding-top: clamp(0.3rem, 0.8vw, 0.5rem);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.goal-list li::before {
+  content: attr(data-n);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+  padding-top: 0.15rem;
+}
+
+/* ============================================
+   FULL-WIDTH CONTENT AREA (slides without two-col)
+   ============================================ */
+.full-content {
+  flex: 1;
+  padding: var(--pad-v) var(--pad-h);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.slide .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.slide.visible .reveal { opacity: 1; transform: translateY(0); }
+
+.slide.visible .reveal:nth-child(1) { transition-delay: 0.05s; }
+.slide.visible .reveal:nth-child(2) { transition-delay: 0.12s; }
+.slide.visible .reveal:nth-child(3) { transition-delay: 0.19s; }
+.slide.visible .reveal:nth-child(4) { transition-delay: 0.26s; }
+.slide.visible .reveal:nth-child(5) { transition-delay: 0.33s; }
+.slide.visible .reveal:nth-child(6) { transition-delay: 0.40s; }
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+@media (max-height: 700px) {
+  :root {
+    --pad-v: clamp(0.5rem, 1.5vw, 1rem);
+    --pad-h: clamp(1rem,   4vw,   2.5rem);
+    --gap:   clamp(0.3rem, 1vw,   0.75rem);
+  }
+}
+
+@media (max-height: 600px) {
+  :root {
+    --pad-v: clamp(0.4rem, 1.2vw, 0.75rem);
+    --pad-h: clamp(0.75rem, 3vw,  2rem);
+    --gap:   clamp(0.25rem, 0.8vw, 0.5rem);
+    --text-3xl: clamp(1.4rem, 3.5vw, 2rem);
+    --text-2xl: clamp(1.1rem, 2.5vw, 1.6rem);
+  }
+}
+
+@media (max-height: 500px) {
+  :root {
+    --text-3xl: clamp(1.1rem, 3vw,  1.6rem);
+    --text-2xl: clamp(0.9rem, 2vw,  1.3rem);
+    --text-xl:  clamp(0.8rem, 1.5vw, 1rem);
+    --text-md:  clamp(0.7rem, 1.2vw, 0.9rem);
+    --text-base: clamp(0.65rem, 1vw, 0.8rem);
+    --text-sm:  clamp(0.6rem, 0.9vw, 0.75rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .two-col, .two-col.even {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .left-col { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+  .persona-layout { grid-template-columns: clamp(3.5rem, 10vw, 5rem) 1fr; }
+  .card-grid.cols-3, .card-grid.cols-2x3 { grid-template-columns: 1fr; }
+  .persona-row { grid-template-columns: 1fr; }
+  .scope-cols { grid-template-columns: 1fr; }
+  .ux-flow { flex-wrap: wrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide .reveal { transition: opacity 0.2s ease; transform: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progress"></div>
+
+<!-- ==========================================
+     SLIDE 01 — PROJECT SNAPSHOT
+     ========================================== -->
+<section class="slide" id="slide-1">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Snapshot</span>
+  </div>
+
+  <div class="two-col">
+    <div class="left-col">
+      <div class="reveal">
+        <p class="eyebrow">AI Growth Engine</p>
+        <h1 class="slide-title">Mamm0th<br><strong>by Roberto M</strong></h1>
+      </div>
+      <div class="meta-grid reveal">
+        <div class="meta-item">
+          <div class="meta-label">Role</div>
+          <div class="meta-value">Solo PM-Engineer</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Status</div>
+          <div class="meta-value">In Development</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Stack</div>
+          <div class="meta-value">Next.js · Supabase · OpenAI · Square</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Target</div>
+          <div class="meta-value">SMB Square Merchants</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <p class="body-text reveal">
+        Weekly AI prioritization engine that turns Square transaction data into <em>exactly 3 revenue-impacting actions</em> — then measures whether they worked.
+      </p>
+      <div class="stat-row reveal">
+        <div class="stat">
+          <span class="stat-num">3</span>
+          <span class="stat-label">Priorities / week</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">90d</span>
+          <span class="stat-label">Data window</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">+7d</span>
+          <span class="stat-label">Impact measured</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">6</span>
+          <span class="stat-label">Revenue patterns</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num" id="counter">01 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Mamm0th</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 02 — BACKGROUND: MISSION + PROBLEM
+     ========================================== -->
+<section class="slide" id="slide-2">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Background</span>
+  </div>
+
+  <div class="two-col">
+    <div class="left-col">
+      <div class="reveal">
+        <p class="eyebrow">01 — Background</p>
+        <h2 class="slide-heading">Mission &amp;<br><strong>Problem</strong></h2>
+      </div>
+      <div class="reveal" style="margin-top:auto;">
+        <p class="section-label" style="margin-bottom:0.4rem;">Company Mission</p>
+        <p class="body-text" style="font-size:var(--text-sm);">Help small business owners on Square compete through their own data — turning transaction history into weekly revenue action.</p>
+      </div>
+    </div>
+
+    <div class="right-col" style="justify-content:flex-start; padding-top:clamp(1.5rem,3vw,3rem);">
+      <p class="section-label reveal">Problem Statement</p>
+      <div class="north-star reveal" style="margin-top:var(--gap);">
+        <p class="north-star-metric" style="font-size:var(--text-lg); font-weight:300; line-height:1.6;">
+          "SMB owners on Square ($500K–$5M revenue) struggle to act on their own transaction data because insights are buried in reports and they lack a trusted prioritization system, leading to <strong>reactive decisions and missed weekly revenue opportunities</strong>."
+        </p>
+      </div>
+
+      <div class="reveal" style="display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); margin-top:var(--gap);">
+        <div class="meta-item">
+          <div class="meta-label">Who</div>
+          <div class="meta-value">SMB Square merchants · $500K–$5M ARR</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">What</div>
+          <div class="meta-value">Can't act on transaction data</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Why</div>
+          <div class="meta-value">No trusted prioritization system</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Outcome</div>
+          <div class="meta-value">Reactive decisions, missed revenue</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">02 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Background</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 03 — BACKGROUND: WHY NOW
+     ========================================== -->
+<section class="slide" id="slide-3">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Background</span>
+  </div>
+
+  <div class="two-col">
+    <div class="left-col">
+      <div class="reveal">
+        <p class="eyebrow">01 — Background</p>
+        <h2 class="slide-heading">Why<br><strong>Now?</strong></h2>
+      </div>
+      <div class="reveal" style="margin-top:auto;">
+        <p class="body-text" style="font-size:var(--text-sm);">Three converging tailwinds make this the right moment to build.</p>
+      </div>
+    </div>
+
+    <div class="right-col" style="justify-content:center;">
+      <div class="card-grid cols-3 reveal" style="flex:0; height:auto;">
+        <div class="card">
+          <span class="card-num">01</span>
+          <h3 class="card-heading">LLMs Democratize Analysis</h3>
+          <p>GPT-4o turns messy transaction data into actionable language at near-zero marginal cost — previously impossible for SMBs without analysts.</p>
+        </div>
+        <div class="card">
+          <span class="card-num">02</span>
+          <h3 class="card-heading">Square API Richness</h3>
+          <p>90-day historical transaction data now accessible via OAuth — granular enough for pattern detection across time-of-day, category, and customer segments.</p>
+        </div>
+        <div class="card">
+          <span class="card-num">03</span>
+          <h3 class="card-heading">SMB Data Overwhelm</h3>
+          <p>Post-COVID owners are more tech-savvy than ever but more data-buried. They have dashboards — they lack prioritization.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">03 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Background</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 04 — PROJECT OVERVIEW: GOALS + NORTH STAR
+     ========================================== -->
+<section class="slide" id="slide-4">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Project Overview</span>
+  </div>
+
+  <div class="two-col">
+    <div class="left-col">
+      <div class="reveal">
+        <p class="eyebrow">02 — Overview</p>
+        <h2 class="slide-heading">Goals &amp;<br><strong>North Star</strong></h2>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="north-star reveal">
+        <div class="north-star-metric">% of weekly priorities marked "acted on" within 7 days</div>
+        <div class="north-star-sub">If this goes up, Mamm0th is generating trusted, actionable intelligence.</div>
+      </div>
+
+      <ul class="goal-list reveal">
+        <li data-n="G1">Validate that AI-generated priorities are trusted enough to act on — without requiring a human advisor</li>
+        <li data-n="G2">Build a closed-loop measurement system: generate priority → track action → measure revenue delta</li>
+        <li data-n="G3">Prove product-market fit with Square merchants doing $500K–$5M before pursuing paid growth</li>
+        <li data-n="G4">Establish AI-assisted memory that improves priority quality over time per merchant</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">04 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Project Overview</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 05 — PROJECT OVERVIEW: METRICS
+     ========================================== -->
+<section class="slide" id="slide-5">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Project Overview</span>
+  </div>
+
+  <div class="two-col even">
+    <div class="left-col">
+      <div class="reveal">
+        <p class="eyebrow">02 — Overview</p>
+        <h2 class="slide-heading">Supporting<br><strong>Metrics</strong></h2>
+      </div>
+      <ul class="metric-list reveal" style="margin-top:var(--gap);">
+        <li>
+          <div class="metric-label">Priority Action Rate</div>
+          <div class="metric-val">% of weekly priorities the merchant marks "acted on"</div>
+        </li>
+        <li>
+          <div class="metric-label">Time-to-First-Priority</div>
+          <div class="metric-val">Minutes from Square OAuth → first priority generated</div>
+        </li>
+        <li>
+          <div class="metric-label">Chat Engagement Rate</div>
+          <div class="metric-val">% of sessions where merchant asks a follow-up question</div>
+        </li>
+        <li>
+          <div class="metric-label">Impact Confirmation Rate</div>
+          <div class="metric-val">% of acted-on priorities with measurable +7d revenue delta</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="right-col" style="border-left:1px solid rgba(255,255,255,0.15); justify-content:flex-start; padding-top:clamp(1.5rem,3vw,2.5rem);">
+      <div class="reveal">
+        <p class="eyebrow">Guardrails</p>
+        <h2 class="slide-heading" style="font-size:var(--text-xl);">Must <strong>Not</strong> Break</h2>
+      </div>
+      <ul class="metric-list reveal" style="margin-top:var(--gap);">
+        <li>
+          <div class="metric-label">Hallucination Rate</div>
+          <div class="metric-val">AI must never cite revenue figures not in the DB — zero tolerance</div>
+        </li>
+        <li>
+          <div class="metric-label">Churn Within 14 Days</div>
+          <div class="metric-val">Early drop-off signals priority quality failure, not engagement failure</div>
+        </li>
+        <li>
+          <div class="metric-label">Onboarding Completion</div>
+          <div class="metric-val">Must stay above 80% — drop = Square OAuth friction, not product</div>
+        </li>
+        <li>
+          <div class="metric-label">Weekly Generation Latency</div>
+          <div class="metric-val">Priority batch must complete within 60s of trigger</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">05 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Project Overview</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 06 — IDEATION: STAKEHOLDERS + RESEARCH
+     ========================================== -->
+<section class="slide" id="slide-6">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Ideation</span>
+  </div>
+
+  <div class="two-col">
+    <div class="left-col">
+      <div class="reveal">
+        <p class="eyebrow">03 — Ideation</p>
+        <h2 class="slide-heading">Stakeholders<br>&amp; <strong>Research</strong></h2>
+      </div>
+    </div>
+
+    <div class="right-col" style="justify-content:flex-start; padding-top:clamp(1rem,2.5vw,2rem);">
+      <table class="stakeholder-table reveal">
+        <thead>
+          <tr>
+            <th>Stakeholder</th>
+            <th>Role</th>
+            <th>Key Input / Concern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Marcus T.</td>
+            <td>Target User — Restaurant</td>
+            <td>"I need the one thing to fix next week, not a report"</td>
+          </tr>
+          <tr>
+            <td>Priya S.</td>
+            <td>Target User — Retail</td>
+            <td>"I keep second-guessing my inventory — I need confidence"</td>
+          </tr>
+          <tr>
+            <td>Square API docs</td>
+            <td>Platform constraint</td>
+            <td>90-day window; OAuth scope determines data richness</td>
+          </tr>
+          <tr>
+            <td>Aokiji (PM-Eng)</td>
+            <td>Builder</td>
+            <td>pgvector sufficient for MVP; Inngest over raw cron for observability</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="reveal">
+        <p class="section-label" style="margin-bottom:var(--gap);">Research Scope</p>
+        <ul class="scope-list">
+          <li>Synthesized pain points from 2 representative SMB owner profiles across restaurant and retail verticals</li>
+          <li>Reviewed Square API capabilities and 90-day data window constraints</li>
+          <li>Analysed competitor landscape: Square Dashboard, Intuit reports, Kabbage Insights</li>
+          <li>Mapped AI prioritization patterns from analogous products (Notion AI, Linear, Superhuman)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">06 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Ideation</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 07 — PERSONA 1: MARCUS
+     ========================================== -->
+<section class="slide" id="slide-7">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Persona 01</span>
+  </div>
+
+  <div class="persona-layout reveal">
+    <div class="persona-strip">
+      <span class="persona-initial">M</span>
+      <span class="persona-name">Marcus T.</span>
+    </div>
+
+    <div class="persona-detail">
+      <div>
+        <p class="eyebrow">Restaurant Owner — Fast Casual</p>
+        <h2 class="slide-heading" style="font-size:var(--text-xl);">Marcus<strong>, 38</strong></h2>
+      </div>
+
+      <div class="persona-row">
+        <div class="persona-field">
+          <div class="field-label">Background</div>
+          <div class="field-val">Runs 2-location fast-casual in Austin. No marketing team — does everything himself between service rushes.</div>
+        </div>
+        <div class="persona-field">
+          <div class="field-label">Goals</div>
+          <div class="field-val">Know which time slots underperform. Stop flying blind on Tuesday lunch. Make confident staffing calls.</div>
+        </div>
+        <div class="persona-field">
+          <div class="field-label">Frustrations</div>
+          <div class="field-val">Square Dashboard shows him numbers but never tells him what to do. "Too much data, zero direction."</div>
+        </div>
+        <div class="persona-field">
+          <div class="field-label">Tech Savviness</div>
+          <div class="field-val">Medium — uses Square daily, comfortable with apps, won't read documentation.</div>
+        </div>
+      </div>
+
+      <div class="jtbd-quote">
+        <p class="jtbd-label">Jobs to Be Done</p>
+        <blockquote>"When my Tuesday lunch is slow, I want the ONE thing I should change next week — so I can act before I lose another week of margin."</blockquote>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">07 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Target Customer</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 08 — PERSONA 2: PRIYA
+     ========================================== -->
+<section class="slide" id="slide-8">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Persona 02</span>
+  </div>
+
+  <div class="persona-layout reveal">
+    <div class="persona-strip">
+      <span class="persona-initial">P</span>
+      <span class="persona-name">Priya S.</span>
+    </div>
+
+    <div class="persona-detail">
+      <div>
+        <p class="eyebrow">Boutique Retail Owner</p>
+        <h2 class="slide-heading" style="font-size:var(--text-xl);">Priya<strong>, 44</strong></h2>
+      </div>
+
+      <div class="persona-row">
+        <div class="persona-field">
+          <div class="field-label">Background</div>
+          <div class="field-val">Single-location women's boutique in Chicago. Sole buyer, seller, and ops manager. No CFO. No analyst.</div>
+        </div>
+        <div class="persona-field">
+          <div class="field-label">Goals</div>
+          <div class="field-val">Justify inventory decisions with data. Stop over-ordering seasonal items. Improve week-over-week revenue predictability.</div>
+        </div>
+        <div class="persona-field">
+          <div class="field-label">Frustrations</div>
+          <div class="field-val">"I feel like I'm always reacting. I know I have the data but I can't make sense of it fast enough to actually use it."</div>
+        </div>
+        <div class="persona-field">
+          <div class="field-label">Tech Savviness</div>
+          <div class="field-val">Medium-high — uses Square, Shopify, Instagram. Trusts apps that give clear recommendations.</div>
+        </div>
+      </div>
+
+      <div class="jtbd-quote">
+        <p class="jtbd-label">Jobs to Be Done</p>
+        <blockquote>"When planning my week, I want clear priorities so I can stop second-guessing myself — and spend my energy executing, not deciding."</blockquote>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">08 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Target Customer</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 09 — CUSTOMER SEGMENTATION
+     ========================================== -->
+<section class="slide" id="slide-9">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Segmentation</span>
+  </div>
+
+  <div class="full-content">
+    <div class="reveal" style="display:flex; justify-content:space-between; align-items:baseline;">
+      <div>
+        <p class="eyebrow">04 — Customer Segmentation</p>
+        <h2 class="slide-heading">Who We're <strong>Building For</strong></h2>
+      </div>
+      <p class="mono-label">Scored 1–5 per dimension</p>
+    </div>
+
+    <table class="data-table reveal">
+      <thead>
+        <tr>
+          <th>Segment</th>
+          <th style="text-align:center;">Impact</th>
+          <th style="text-align:center;">Urgency</th>
+          <th style="text-align:center;">Market Size</th>
+          <th style="text-align:center;">Total</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td><strong>Solo SMB · $500K–$5M on Square</strong></td>
+          <td class="score-cell">5</td>
+          <td class="score-cell">5</td>
+          <td class="score-cell">4</td>
+          <td class="score-cell">14</td>
+          <td>No data team; data anxiety is acute; 500K+ US businesses</td>
+        </tr>
+        <tr>
+          <td>Multi-location SMB · 3–10 locations</td>
+          <td class="score-cell">4</td>
+          <td class="score-cell">3</td>
+          <td class="score-cell">3</td>
+          <td class="score-cell">10</td>
+          <td>Have ops managers; problem softer; harder onboarding</td>
+        </tr>
+        <tr>
+          <td>Enterprise / Chain · 50+ locations</td>
+          <td class="score-cell">2</td>
+          <td class="score-cell">2</td>
+          <td class="score-cell">5</td>
+          <td class="score-cell">9</td>
+          <td>Have BI teams; won't use MVP tooling; long sales cycle</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout-box reveal">
+      <p class="callout-label">Selected Segment</p>
+      <p>Solo SMB merchants on Square ($500K–$5M) — highest urgency, highest impact, no competitive solution. Multi-location and enterprise have internal resources or different buying cycles.</p>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">09 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Customer Segmentation</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 10 — PAIN POINTS
+     ========================================== -->
+<section class="slide" id="slide-10">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Pain Points</span>
+  </div>
+
+  <div class="full-content">
+    <div class="reveal" style="display:flex; justify-content:space-between; align-items:baseline;">
+      <div>
+        <p class="eyebrow">05 — Pain Points</p>
+        <h2 class="slide-heading">What's <strong>Breaking</strong></h2>
+      </div>
+      <p class="mono-label">Scored 1–5 per dimension</p>
+    </div>
+
+    <table class="data-table reveal">
+      <thead>
+        <tr>
+          <th>Pain Point</th>
+          <th style="text-align:center;">Impact</th>
+          <th style="text-align:center;">Urgency</th>
+          <th style="text-align:center;">Prevalence</th>
+          <th style="text-align:center;">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td><strong>No prioritization system — owners don't know what to act on first</strong></td>
+          <td class="score-cell">5</td>
+          <td class="score-cell">5</td>
+          <td class="score-cell">5</td>
+          <td class="score-cell">15</td>
+        </tr>
+        <tr>
+          <td>Data is buried in reports — insights aren't surfaced proactively</td>
+          <td class="score-cell">4</td>
+          <td class="score-cell">4</td>
+          <td class="score-cell">5</td>
+          <td class="score-cell">13</td>
+        </tr>
+        <tr>
+          <td>No feedback loop — owners don't know if past actions worked</td>
+          <td class="score-cell">4</td>
+          <td class="score-cell">3</td>
+          <td class="score-cell">4</td>
+          <td class="score-cell">11</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout-box reveal">
+      <p class="callout-label">Prioritized Pain + Validation</p>
+      <p><strong>No prioritization system</strong> is the root blocker — even if we surfaced data perfectly, owners would still freeze without a "what do I do first" answer. Validated via both personas: Marcus and Priya independently articulated the same need in different words.</p>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">10 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Pain Points</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 11 — SOLUTIONS & PRIORITIZATION
+     ========================================== -->
+<section class="slide" id="slide-11">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Solutions</span>
+  </div>
+
+  <div class="full-content">
+    <div class="reveal" style="display:flex; justify-content:space-between; align-items:baseline;">
+      <div>
+        <p class="eyebrow">06 — Solutions</p>
+        <h2 class="slide-heading">What We <strong>Chose to Build</strong></h2>
+      </div>
+      <p class="mono-label">Ease · Effort · Effectiveness (1–5)</p>
+    </div>
+
+    <table class="data-table reveal">
+      <thead>
+        <tr>
+          <th>Proposed Solution</th>
+          <th style="text-align:center;">Ease</th>
+          <th style="text-align:center;">Eng. Effort</th>
+          <th style="text-align:center;">Effectiveness</th>
+          <th style="text-align:center;">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight">
+          <td><strong>Weekly AI-generated top-3 priorities from transaction embeddings</strong></td>
+          <td class="score-cell">4</td>
+          <td class="score-cell">3</td>
+          <td class="score-cell">5</td>
+          <td class="score-cell">12</td>
+        </tr>
+        <tr>
+          <td>Rule-based alerts (e.g. "Tuesday lunch down 20%")</td>
+          <td class="score-cell">5</td>
+          <td class="score-cell">5</td>
+          <td class="score-cell">2</td>
+          <td class="score-cell">12</td>
+        </tr>
+        <tr>
+          <td>Human advisor / coaching layer</td>
+          <td class="score-cell">1</td>
+          <td class="score-cell">1</td>
+          <td class="score-cell">5</td>
+          <td class="score-cell">7</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout-box reveal">
+      <p class="callout-label">Selected + Deprioritized</p>
+      <p><strong>AI priorities won</strong> — rule-based alerts scored equally on ease but would produce generic, non-contextual output (a 20% drop alert tells you nothing about what to do). Human advisors are unscalable at SMB price points. AI priorities can generalize across cuisine types and retail categories where rules cannot.</p>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">11 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Solutions</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 12 — MVP DEFINITION
+     ========================================== -->
+<section class="slide" id="slide-12">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">MVP</span>
+  </div>
+
+  <div class="two-col">
+    <div class="left-col">
+      <div class="reveal">
+        <p class="eyebrow">07 — MVP</p>
+        <h2 class="slide-heading">Scope &amp;<br><strong>UX Flow</strong></h2>
+      </div>
+    </div>
+
+    <div class="right-col" style="justify-content:flex-start; padding-top:clamp(1rem,2.5vw,2rem);">
+      <div class="scope-cols reveal">
+        <div class="scope-section">
+          <p class="scope-section-label in">In Scope</p>
+          <ul class="scope-list">
+            <li>Square OAuth + 90-day transaction sync</li>
+            <li>Weekly AI priority generation (3 priorities, Inngest cron)</li>
+            <li>Transaction embedding pipeline (pgvector)</li>
+            <li>RAG chat — ask questions about your data</li>
+            <li>Impact tracking — +7d revenue delta per priority</li>
+            <li>Seller memory — AI learns your business over time</li>
+          </ul>
+        </div>
+        <div class="scope-section">
+          <p class="scope-section-label out">Out of Scope</p>
+          <ul class="scope-list">
+            <li>Multi-location aggregation (v2)</li>
+            <li>Team / employee access management</li>
+            <li>Direct action execution (e.g. send Square campaign)</li>
+            <li>Fine-tuned model — OpenAI API sufficient for MVP</li>
+            <li>Custom reporting or data export</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="reveal" style="margin-top:var(--gap);">
+        <p class="mono-label" style="margin-bottom:0.5rem;">Core UX Flow</p>
+        <div class="ux-flow">
+          <div class="ux-step">
+            <div class="ux-step-num">1</div>
+            <p>Connect Square via OAuth</p>
+          </div>
+          <div class="ux-step">
+            <div class="ux-step-num">2</div>
+            <p>Sync 90d transaction history</p>
+          </div>
+          <div class="ux-step">
+            <div class="ux-step-num">3</div>
+            <p>AI generates 3 weekly priorities</p>
+          </div>
+          <div class="ux-step">
+            <div class="ux-step-num">4</div>
+            <p>Merchant acts + confirms</p>
+          </div>
+          <div class="ux-step">
+            <div class="ux-step-num">5</div>
+            <p>+7d impact measured automatically</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">12 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">MVP Definition</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 13 — AI CONSIDERATIONS
+     ========================================== -->
+<section class="slide" id="slide-13">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">AI Considerations</span>
+  </div>
+
+  <div class="full-content">
+    <div class="reveal">
+      <p class="eyebrow">08 — AI Considerations</p>
+      <h2 class="slide-heading">How AI <strong>Works Here</strong></h2>
+    </div>
+
+    <div class="card-grid cols-2x3 reveal" style="flex:1;">
+      <div class="card">
+        <span class="card-num">Model Stack</span>
+        <h3 class="card-heading">GPT-4o + Embeddings</h3>
+        <p>GPT-4o for priority generation &amp; RAG chat. <code style="font-family:var(--font-sans); font-size:0.9em; font-weight:600; color:rgba(255,255,255,0.9);">text-embedding-3-small</code> for transaction vectors stored in pgvector.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">Why AI</span>
+        <h3 class="card-heading">Rules Can't Generalize</h3>
+        <p>Patterns are industry-specific. A Tuesday dip means something different for sushi vs. boutique retail. LLMs reason across context; rules don't.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">Build vs. Buy</span>
+        <h3 class="card-heading">OpenAI API for MVP</h3>
+        <p>Fine-tuning only considered if output quality regresses at scale. Structured outputs (JSON mode) enforce schema without post-processing.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">Failure Modes</span>
+        <h3 class="card-heading">Hallucinated Numbers</h3>
+        <p>Risk: AI cites revenue figures not in the DB. Mitigation: all revenue claims must reference actual DB rows; RAG context injected per query.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">Guardrails</span>
+        <h3 class="card-heading">Grounded Claims Only</h3>
+        <p>Every priority references a transaction pattern. Fallback: "Check with your accountant for precise figures." Generic advice blocked by prompt constraint.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">Responsible AI</span>
+        <h3 class="card-heading">Transparency + Privacy</h3>
+        <p>Merchants informed all priorities are AI-generated. Square data used only for their own analysis. No cross-merchant data leakage — RLS enforced at DB level.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">13 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">AI Considerations</span>
+  </div>
+</section>
+
+<!-- ==========================================
+     SLIDE 14 — ENGINEERING PERSPECTIVE
+     ========================================== -->
+<section class="slide" id="slide-14">
+  <div class="top-bar">
+    <span class="project-label">Product Portfolio — Mamm0th</span>
+    <span class="section-tag">Engineering</span>
+  </div>
+
+  <div class="two-col">
+    <div class="left-col">
+      <div class="reveal">
+        <p class="eyebrow">09 — Engineering</p>
+        <h2 class="slide-heading">Technical<br><strong>Decisions</strong></h2>
+      </div>
+      <div class="reveal" style="margin-top:auto;">
+        <p class="body-text" style="font-size:var(--text-sm);">As PM-Engineer, architectural choices were made with product outcomes — not just engineering taste — as the primary constraint.</p>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <ul class="eng-list reveal">
+        <li class="eng-item">
+          <div class="eng-item-title">Inngest over raw cron</div>
+          <div class="eng-item-desc">Background jobs need retries, observability, and fan-out for parallel embedding tasks. Inngest provides all three with zero infra overhead. Raw cron would require a separate worker process and blind failure handling — unacceptable for a weekly job merchants rely on.</div>
+        </li>
+        <li class="eng-item">
+          <div class="eng-item-title">pgvector not Pinecone</div>
+          <div class="eng-item-desc">Zero additional infrastructure, familiar SQL queries, Supabase already in stack. At SMB scale (<em>~90 days × 1 merchant = ~2,700 transactions</em>), a dedicated vector DB would be premature optimization. Revisit at 10K+ merchants.</div>
+        </li>
+        <li class="eng-item">
+          <div class="eng-item-title">Lazy singleton clients</div>
+          <div class="eng-item-desc">Next.js App Router initializes module-level code at build time — <em>OpenAI</em> and <em>supabaseAdmin</em> clients must be deferred. Proxy pattern wraps client creation in a getter so callers use normal syntax with zero build-time errors.</div>
+        </li>
+        <li class="eng-item">
+          <div class="eng-item-title">Streaming chat responses</div>
+          <div class="eng-item-desc">Multi-sentence RAG answers take 2–4s at GPT-4o. Streaming starts the first token at ~400ms, reducing perceived latency by ~80% — measurably improves trust that the system is working.</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <span class="slide-num">14 / 14</span>
+    <div class="rule-line"></div>
+    <span class="slide-num">Engineering Perspective</span>
+  </div>
+</section>
+
+<script>
+/* ============================================
+   SLIDE PRESENTATION CONTROLLER
+   Handles: keyboard nav, scroll nav, swipe,
+   progress bar, slide counter, IntersectionObserver
+   ============================================ */
+
+(function () {
+  'use strict';
+
+  const TOTAL = 14;
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const progress = document.getElementById('progress');
+  const counter  = document.getElementById('counter');
+
+  let current = 0;
+  let isScrolling = false;
+
+  /* ---- Helpers ---- */
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function updateChrome(idx) {
+    if (progress) progress.style.width = ((idx + 1) / TOTAL * 100) + '%';
+    if (counter)  counter.textContent  = pad(idx + 1) + ' / ' + pad(TOTAL);
+  }
+
+  function goTo(idx) {
+    if (idx < 0 || idx >= TOTAL) return;
+    current = idx;
+    slides[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    updateChrome(idx);
+  }
+
+  /* ---- Keyboard navigation ---- */
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+      case ' ':
+        e.preventDefault();
+        goTo(current + 1);
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        e.preventDefault();
+        goTo(current - 1);
+        break;
+      case 'Home':
+        e.preventDefault();
+        goTo(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        goTo(TOTAL - 1);
+        break;
+    }
+  });
+
+  /* ---- Wheel navigation (debounced) ---- */
+  document.addEventListener('wheel', function (e) {
+    if (isScrolling) return;
+    isScrolling = true;
+    if (e.deltaY > 30)       goTo(current + 1);
+    else if (e.deltaY < -30) goTo(current - 1);
+    setTimeout(function () { isScrolling = false; }, 800);
+  }, { passive: true });
+
+  /* ---- Touch / swipe ---- */
+  var touchStartY = 0;
+  var touchStartX = 0;
+
+  document.addEventListener('touchstart', function (e) {
+    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (e) {
+    var dy = touchStartY - e.changedTouches[0].clientY;
+    var dx = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 40) {
+      goTo(dy > 0 ? current + 1 : current - 1);
+    }
+  }, { passive: true });
+
+  /* ---- IntersectionObserver — .visible class + counter sync ---- */
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        var idx = slides.indexOf(entry.target);
+        if (idx !== -1) {
+          current = idx;
+          updateChrome(idx);
+        }
+      }
+    });
+  }, { threshold: 0.55 });
+
+  slides.forEach(function (slide) { observer.observe(slide); });
+
+  /* ---- Init ---- */
+  updateChrome(0);
+
+}());
+</script>
+</body>
+</html>

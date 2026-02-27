@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function FooterBar() {
   return (
     <footer className="relative z-10 px-8 py-10 border-t border-white/5">
@@ -13,7 +15,17 @@ export function FooterBar() {
             Compounding Revenue
           </span>
         </div>
-        <div>Next Cycle: Q2 2026 in 38 Days</div>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/docs/mamm0th-portfolio.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="opacity-100 bg-white text-black font-bold px-6 py-3 rounded-lg hover:bg-white/90 transition-all active:scale-[0.98] text-[10px] uppercase tracking-widest"
+          >
+            Product Portfolio
+          </Link>
+          <span>Next Cycle: Q2 2026 in 38 Days</span>
+        </div>
       </div>
     </footer>
   );
