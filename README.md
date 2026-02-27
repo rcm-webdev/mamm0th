@@ -165,5 +165,5 @@ SQUARE_ENVIRONMENT=sandbox
 ```
 
 ## Related Projects
-[![Nem0](https://raw.githubusercontent.com/rcm-webdev/nem-0/main/public/nem0.jpg)](https://github.com/rcm-webdev/nem-0)
+[![Nem0](https://raw.githubusercontent.com/rcm-webdev/nem-0/main/public/nem-0.jpg)](https://github.com/rcm-webdev/nem-0)
 [![Vega](https://raw.githubusercontent.com/rcm-webdev/vega-autonomous-ai-agent/main/public/vega-scientist.jpg)](https://github.com/rcm-webdev/vega-autonomous-ai-agent)
